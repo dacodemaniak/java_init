@@ -15,6 +15,7 @@ public class Anniversaire extends Fete {
 	 */
 	private String type = "Anniversaire";
 	
+	
 	/**
 	 * Retourne la valeur de l'attribut privé "type" de la classe Anniversaire
 	 * @return
@@ -30,6 +31,13 @@ public class Anniversaire extends Fete {
 		message += "Il aura lieu " + this.jourSemaine + "\n";
 		message += "Organisateur : " + this.organisateur;
 		
+		// Ajoutons les invités à notre anniversaire
+		message += "\nLes invités sont :\n";
+		
+		// On boucle sur le ArrayList personnes
+		for(int i=0; i < this.personnes.size(); i++){
+			message += this.personnes.get(i).getNom() + " " + this.personnes.get(i).getPrenom() + "\n";
+		}
 		JOptionPane.showMessageDialog(null, message);
 	}
 }

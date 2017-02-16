@@ -5,6 +5,8 @@ package com.webprojet.fete;
 
 import java.util.ArrayList;
 
+import com.webprojet.fete.personne.Personne;
+
 /**
  * @author DaCodeManiak
  *
@@ -23,7 +25,11 @@ public class Fete {
 	/**
 	 * Tableau des personnes invitées à l'instance courante de la fête
 	 */
-	private ArrayList<Personne> personnes;
+	protected ArrayList<Personne> personnes;
+	
+	public Fete(){
+		this.personnes = new ArrayList<Personne>();
+	}
 	
 	/**
 	 * Définit le nom de l'organisateur

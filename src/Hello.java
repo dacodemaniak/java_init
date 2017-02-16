@@ -14,6 +14,9 @@ public class Hello {
 	 * @param args Tableau de chaîne de caractères String[]
 	 * @return void Pas de valeur de retour
 	 */
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args){
 		/**
 		 * System est une classe de la librairie standard Java
@@ -61,7 +64,7 @@ public class Hello {
 		String chaineFinale = "Hello "; // Parce que ça commencera toujours par Hello
 		
 		
-		if(age > 18){
+		/*if(age > 18){
 			majeur = true;
 			chaineFinale += "Grand ";
 		} else {
@@ -70,6 +73,7 @@ public class Hello {
 		}
 		
 		chaineFinale += "Java. Vous avez : " + age + " ans";
+		*/
 		
 		/**
 		 * Package : javax.swing.* (Package "graphique" standard de Java)
@@ -95,8 +99,10 @@ public class Hello {
 		 */
 	}
 	
+	/*
 	private void setAge(byte age){
 		this.age = age;
 	}
+	*/
 	
 }

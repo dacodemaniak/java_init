@@ -3,6 +3,8 @@
  */
 package com.webprojet.fete;
 
+import com.webprojet.fete.personne.Personne;
+
 /**
  * @author DaCodeManiak
  *
@@ -32,6 +34,13 @@ public class Loader {
 			.prenom("Jean");
 		// Invitons cette nouvelle personne
 		monAnniversaire.inviter(invite_1);
+		
+		Personne invite_2 = new Personne();
+		invite_2
+			.age(25)
+			.nom("Talaron")
+			.prenom("Delphine");
+		monAnniversaire.inviter(invite_2);
 		
 		/**
 		 * Affichons donc le résultat...

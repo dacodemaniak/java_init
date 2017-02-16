@@ -1,4 +1,4 @@
-package com.webprojet.fete;
+package com.webprojet.fete.personne;
 /**
  * 
  */
@@ -107,8 +107,9 @@ public class Personne {
 	 * Définit l'attribut nom de l'instance courante de Personne
 	 * @param prenom
 	 */
-	public void setPrenom(String prenom){
+	public Personne setPrenom(String prenom){
 		this.prenom = prenom;
+		return this;
 	}
 	
 	public String getPrenom(){
