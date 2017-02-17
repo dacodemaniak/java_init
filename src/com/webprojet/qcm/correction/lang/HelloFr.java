@@ -1,9 +1,11 @@
 /**
  * 
  */
-package com.webprojet.qcm.correction;
+package com.webprojet.qcm.correction.lang;
 
 import javax.swing.*;
+
+import com.webprojet.qcm.correction.*;
 
 /**
  * @author DaCodeManiak

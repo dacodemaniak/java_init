@@ -5,4 +5,4 @@
  * @author DaCodeManiak
  *
  */
-package com.webprojet.qcm.correction.fr;
+package com.webprojet.qcm.correction.lang;
