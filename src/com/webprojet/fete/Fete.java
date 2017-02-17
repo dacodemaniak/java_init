@@ -27,6 +27,7 @@ public class Fete {
 	 */
 	protected ArrayList<Personne> personnes;
 	
+	
 	public Fete(){
 		this.personnes = new ArrayList<Personne>();
 	}

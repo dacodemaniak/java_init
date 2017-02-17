@@ -15,6 +15,13 @@ public class Boisson {
 	
 	protected String nom;
 	
+	protected String contenant;
+	
+	/**
+	 * Un attribut "final" doit être initialisé, et ne pourra plus être modifié
+	 */
+	protected final String reference;
+	
 	/**
 	 * Constructeur de la classe Boisson
 	 * @param nom
@@ -23,15 +30,46 @@ public class Boisson {
 	public Boisson(String nom, float prix){
 		this.prix = prix;
 		this.nom = nom;
+		this.reference = "Boisson";
 	}
 	
-	public Boisson(){}
+	public Boisson(){
+		this.reference = "Boisson";
+	}
 	
 	public Boisson(String nom){
 		this.nom = nom;
 		this.prix = (float) 1.25;
+		this.reference = "Boisson";
 	}
 	
+	public Boisson setContenant(String contenant){
+		/*
+		switch(contenant){
+		case Contenants.BOTTLE:
+			this.contenant = "Bouteille";
+			break;
+		case Contenants.MAGNUM:
+			this.contenant = "Magnum";
+			break;
+		case Contenants.BALTHAZAR:
+			this.contenant = "Balthazar";
+			break;
+		case Contenants.NABU:
+			this.contenant = "Nabuchodonosor";
+			break;
+		case Contenants.JEROBOAM:
+			this.contenant = "Jeroboam";
+			break;
+		default:
+			this.contenant = "Bouteille";
+			break;
+		}
+		*/
+		this.contenant = contenant;
+		
+		return this;
+	}
 	/**
 	 * Détermine la valeur de l'attribut "prix" de l'instance de Boisson
 	 * <=> setter
@@ -56,7 +94,12 @@ public class Boisson {
 		return this.prix;
 	}
 	
-	public Boisson nom(String nom){
+	/**
+	 * final indique que la méthode concernée ne pourra pas être réécrite dans les classes filles
+	 * @param nom
+	 * @return
+	 */
+	public final Boisson nom(String nom){
 		this.nom = nom;
 		return this;
 	}
@@ -65,7 +108,7 @@ public class Boisson {
 	 * Retourne le nom de la boisson
 	 * @return String
 	 */
-	public String nom(){
+	public final String nom(){
 		return this.nom;
 	}
 }

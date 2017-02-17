@@ -15,6 +15,7 @@ public class Stock {
 	 */
 	private ArrayList stock;
 	
+	
 	/**
 	 * Retourne le stock défini par la méthode "hydrate()"
 	 * @return ArrayList
@@ -47,5 +48,10 @@ public class Stock {
 		volvic.setSucree(false);
 		
 		this.stock.add(volvic);
+		
+		Alcool vodka = new Alcool();
+		vodka
+			.prix((float) 50.80)
+			.nom("Vodka");
 	}
 }

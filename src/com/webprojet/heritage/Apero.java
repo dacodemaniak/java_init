@@ -42,9 +42,11 @@ public class Apero {
 		unDouble = 12.52;
 		unFloat = (float) unDouble;
 		
+		/*
 		Boisson autreBoisson;
 		autreBoisson = (Boisson) paf;
 		System.out.println("Le " + autreBoisson.nom() +  " ne peut pas retourner le " + autreBoisson.getDegre());
+		*/
 	}
 
 }
