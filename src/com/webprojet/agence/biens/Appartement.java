@@ -12,6 +12,9 @@ public class Appartement extends Bien {
 	private boolean isACopro;
 	private boolean hasAParking;
 	private boolean hasABox;
+	
+	private final double commission = 2;
+	
 	/**
 	 * @return the type
 	 */

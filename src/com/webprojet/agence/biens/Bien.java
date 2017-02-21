@@ -20,6 +20,107 @@ public class Bien {
 	protected Personne vendeur;
 	protected float surface;
 	protected GregorianCalendar anneeConstruction;
+	protected boolean isVendu = false;
+	protected String description;
+	
+	/**
+	 * Définir une constante qui contiendra le point de suite...
+	 */
+	private final String CHAINE_SUITE = "[+]";
+	
+	public boolean isVendu(){
+		return this.isVendu;
+	}
+	
+	public Bien isVendu(boolean isVendu){
+		this.isVendu = isVendu;
+		return this;
+	}
+	
+	public Bien description(String description){
+		this.description = description;
+		return this;
+	}
+	
+	public String description(){
+		return this.description;
+	}
+	
+	/**
+	 * Retourne la description du bien tronquée à "maxLength" caractères
+	 * 	si nécessaire.
+	 * @param maxLength int Longueur de la chaîne à retourner
+	 * @return String
+	 */
+	public String description(int maxLength){
+		if(this.description.length() <= maxLength){
+			return this.description;
+		}
+		
+		// La longueur de la description dépasse "maxLength" caractères...
+		return this.description.substring(0, maxLength) + "...";
+		
+		/**
+		 * if(strlen($this->description) <= $maxLength){
+		 * 	return $this->description;
+		 * }
+		 * return substr($this->description,0, $maxLength);
+		 */
+	}
+	
+	public String description(int maxLength, boolean smart){
+		if(this.description.length() <= maxLength){
+			return this.description();
+		}
+		
+		// Trouver le dernier blanc typographique juste avant le maxLength
+		char spacer = ' ';
+		
+		int indiceBlancTypo = this.description.lastIndexOf(spacer, maxLength);
+		
+		// Y-a-t-il donc un espace dans le scope défini ?
+		if(indiceBlancTypo == -1){
+			return this.description.substring(0, maxLength - CHAINE_SUITE.length()) + CHAINE_SUITE;
+		}
+		
+		return this.description.substring(0, indiceBlancTypo) + CHAINE_SUITE;
+	}
+	
+	public String descriptionToWeb(){
+		String webString = "";
+		
+		for(int indice = this.description.indexOf('\n'); // D'où on part
+				indice != -1; // Quand est-ce qu'on s'arrête
+				indice = this.description.indexOf('\n', indice + 1) // Comment j'incrémente l'indice
+		){
+			webString = webString.substring(0, indice) + "<br>" + webString.substring(indice + 1);
+		}
+		return webString == "" ? this.description : webString;
+	}
+	
+	public String descriptionToWeb(boolean stepByStep){
+		String webString = "";
+		String lineFeed = "\n";
+		
+		if(this.description.contains("\n")){
+			for(int indice = 0; indice < this.description.length(); indice++){
+				if(lineFeed.equals(this.description.substring(indice,indice+1))){
+					webString += "<br>";
+					indice++;
+				} else {
+					webString += this.description.substring(indice, indice+1);
+				}
+			}
+		} else {
+			webString = this.description;
+		}
+		return webString;
+	}
+	
+	public String descriptionToWeb(String search, String replace){
+		return this.description.replaceAll(search, replace);
+	}
+	
 	/**
 	 * @return the prixNetVendeur
 	 */

@@ -31,12 +31,14 @@ public class Visite {
 	}
 	
 	public String getBien(){
-		String type;
+		String type = "";
 		
 		if(this.bien instanceof Appartement){
 			type = "Appartement : " + ((Appartement) this.bien).type();
 		} else {
-			type = "Maison " + ((Maison) this.bien).terrain();
+			if(this.bien instanceof Maison){
+				type = "Maison " + ((Maison) this.bien).terrain();
+			}
 		}
 		
 		return type + " : " + this.bien.adresse().ville();

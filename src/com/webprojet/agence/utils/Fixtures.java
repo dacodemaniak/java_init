@@ -115,7 +115,7 @@ public class Fixtures {
 			.prixNetVendeur(70000)
 			.vendeur(this.personnes.get(0))
 			.adresse(this.adresses.get(0));
-
+		
 		appart
 			.isACopro(true)
 			.hasABox(true)

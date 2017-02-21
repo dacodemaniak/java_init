@@ -10,12 +10,20 @@ package com.webprojet.agence.biens;
 public class Maison extends Bien {
 	private double terrain;
 	private boolean isMitoyenne;
+	
+	private final double commission = 2.5;
+	
 	/**
 	 * @return the terrain
 	 */
 	public double terrain() {
 		return this.terrain;
 	}
+	
+	public double getCommissionParDefaut(){
+		return this.commission;
+	}
+	
 	/**
 	 * @param terrain the terrain to set
 	 */

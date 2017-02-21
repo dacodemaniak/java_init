@@ -5,7 +5,9 @@ package com.webprojet.agence;
 
 import java.util.GregorianCalendar;
 
+import com.webprojet.agence.personne.Vendeur;
 import com.webprojet.agence.utils.Fixtures;
+import com.webprojet.agence.vente.Vente;
 import com.webprojet.agence.view.Listing;
 import com.webprojet.agence.visite.Visite;
 import com.webprojet.agence.visite.Visites;
@@ -37,6 +39,14 @@ public class Agence {
 		Listing listing = new Listing();
 		listing.visites(visites);
 		listing.showListing();
+		
+		// Faisons une jolie vente...
+		Vendeur vendeur = new Vendeur(3.25);
+		vendeur.nom("Cro")
+			.prenom("Ernest");
+		Vente vente = new Vente(datas.getBien(2), datas.getPersonne(1), 175000, vendeur);
+		System.out.println(vente.toString());
+		
 	}
 
 }
