@@ -17,6 +17,7 @@ public class SmartDate {
 	private DateFormat dateFormat;
 	private Date date;
 	private GregorianCalendar simpleDate;
+	private int nbJoursRestants;
 	
 	public SmartDate(GregorianCalendar date){
 		this.simpleDate = date;
@@ -46,6 +47,14 @@ public class SmartDate {
 		return (this.simpleDate.get(GregorianCalendar.DAY_OF_YEAR) - date.get(GregorianCalendar.DAY_OF_YEAR) == 0) ? true : false;
 	}
 	
+	public int nbJoursRestants(){
+		return this.nbJoursRestants;
+	}
+	
+	/**
+	 * Calcule la date du prochain anniversaire et définit le nombre de jours
+	 * restants.
+	 */
 	public void newDate(){
 		GregorianCalendar dateRef = new GregorianCalendar();
 		if(this.simpleDate.before(dateRef)){
@@ -55,6 +64,25 @@ public class SmartDate {
 			this.simpleDate.set(GregorianCalendar.YEAR, anneeProchaine);
 			// Ne pas oublier de ré-affecter l'attribut Date date
 			this.date = this.simpleDate.getTime();
+			
+			// Détermine le nombre de jours restants par le calcul suivant :
+			// Nombre de jours restants jusqu'au 31 déc. de l'année N
+			// + Nombre de jours entre le début de l'année suivante et l'anniversaire
+			int untilDec31 = 0;
+			
+			GregorianCalendar nextDec31 = new GregorianCalendar(
+					dateRef.get(GregorianCalendar.YEAR),
+					GregorianCalendar.DECEMBER,
+					31
+			);
+			// Au final, on fait le calcul...
+			this.nbJoursRestants = this.simpleDate.get(GregorianCalendar.DAY_OF_YEAR)
+					+ (nextDec31.get(GregorianCalendar.DAY_OF_YEAR)
+							- dateRef.get(GregorianCalendar.DAY_OF_YEAR)
+			);
+		} else {
+			// Détermine le nombre de jours restants, simplement
+			this.nbJoursRestants = this.simpleDate.get(GregorianCalendar.DAY_OF_YEAR) - dateRef.get(GregorianCalendar.DAY_OF_YEAR);
 		}
 	}
 	
@@ -72,7 +100,7 @@ public class SmartDate {
 	 * @return
 	 */
 	public int attendre(){
-		return 0;
+		return this.nbJoursRestants;
 	}
 	
 	/**

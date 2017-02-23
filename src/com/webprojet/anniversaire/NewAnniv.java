@@ -50,9 +50,9 @@ public class NewAnniv {
 		} else {
 			System.out.println("Il va falloir attendre un peu...");
 			// Demander à recalculer la prochaine date d'anniversaire... le cas échéant
-			anniversaire.newDate(true);
+			anniversaire.newDate();
 			
-			System.out.println("... jusqsu'au : " + anniversaire.humanizeDate());
+			System.out.println("... jusqsu'au : " + anniversaire.humanizeDate() + " soit dans " + anniversaire.attendre() + " jours");
 		}
 	}
 
