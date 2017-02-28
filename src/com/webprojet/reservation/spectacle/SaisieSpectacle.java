@@ -16,13 +16,13 @@ import javax.swing.JTextField;
 
 /**
  * @author DaCodeManiak
- * Définition de l'interface pour la saisie des spectacles
+ * Dï¿½finition de l'interface pour la saisie des spectacles
  * Titre, Description...
  *
  */
 public class SaisieSpectacle extends JPanel {
 	/**
-	 * Définition des attributs du formulaire
+	 * Dï¿½finition des attributs du formulaire
 	 */
 	private JComboBox selectionType = new JComboBox(Spectacle.TYPES);
 	private JTextField saisieTitre = new JTextField(30);
@@ -35,33 +35,33 @@ public class SaisieSpectacle extends JPanel {
 		 */
 		JPanel panneauLabels = new JPanel(new GridLayout(4, 1, 5, 5));
 		/**
-		 * On ajoute des "labels" à ce panneau
+		 * On ajoute des "labels" ï¿½ ce panneau
 		 */
 		panneauLabels.add(new JLabel("Type :"));
 		panneauLabels.add(new JLabel("Titre :"));
-		panneauLabels.add(new JLabel("Présentation :"));
+		panneauLabels.add(new JLabel("PrÃ©sentation :"));
 		panneauLabels.add(new JLabel("Places disponibles :"));
 		
 		/**
 		 * Construit la colonne avec les zones de saisie
 		 */
 		JPanel panneauSaisie = new JPanel(new GridLayout(4, 1, 5, 5));
-		panneauSaisie.add(this.selectionType); // Ajoute la liste déroulante
+		panneauSaisie.add(this.selectionType); // Ajoute la liste dÃ©roulante
 		panneauSaisie.add(this.saisieTitre);
 		panneauSaisie.add(this.saisieDescription);
 		panneauSaisie.add(this.saisiePlaces);
 		
 		/**
-		 * ATTENTION... les panneaux doivent être intégrés dans la fenêtre
+		 * ATTENTION... les panneaux doivent Ãªtre intÃ©grÃ©s dans la fenÃªtre
 		 */
-		setLayout(new BorderLayout(5,5)); // setLayout méthode statique de awt
+		setLayout(new BorderLayout(5,5)); // setLayout mÃ©thode statique de awt
 		add(panneauLabels, BorderLayout.WEST);
 		add(panneauSaisie, BorderLayout.CENTER);
 		add(new JScrollPane(this.saisieDescription), BorderLayout.SOUTH);
 	}
 	
 	/**
-	 * Méthode pour récupérer la saisie utilisateur dans le champ saisieTitre
+	 * Mï¿½thode pour rï¿½cupï¿½rer la saisie utilisateur dans le champ saisieTitre
 	 * @return
 	 */
 	public String titreSaisi(){
