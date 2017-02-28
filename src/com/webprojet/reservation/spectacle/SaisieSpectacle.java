@@ -22,7 +22,7 @@ import javax.swing.JTextField;
  */
 public class SaisieSpectacle extends JPanel {
 	/**
-	 * D�finition des attributs du formulaire
+	 * Définition des attributs du formulaire
 	 */
 	private JComboBox selectionType = new JComboBox(Spectacle.TYPES);
 	private JTextField saisieTitre = new JTextField(30);
@@ -35,7 +35,7 @@ public class SaisieSpectacle extends JPanel {
 		 */
 		JPanel panneauLabels = new JPanel(new GridLayout(4, 1, 5, 5));
 		/**
-		 * On ajoute des "labels" � ce panneau
+		 * On ajoute des "labels" à ce panneau
 		 */
 		panneauLabels.add(new JLabel("Type :"));
 		panneauLabels.add(new JLabel("Titre :"));
@@ -61,7 +61,7 @@ public class SaisieSpectacle extends JPanel {
 	}
 	
 	/**
-	 * M�thode pour r�cup�rer la saisie utilisateur dans le champ saisieTitre
+	 * Méthode pour récupérer la saisie utilisateur
 	 * @return
 	 */
 	public String titreSaisi(){

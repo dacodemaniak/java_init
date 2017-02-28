@@ -12,11 +12,13 @@ import javax.swing.table.DefaultTableModel;
 import com.webprojet.reservation.spectacle.Opera;
 import com.webprojet.reservation.spectacle.SaisieSpectacle;
 import com.webprojet.reservation.spectacle.Spectacle;
+import com.webprojet.reservation.spectacle.Spectacles;
 import com.webprojet.reservation.spectacle.Theatre;
+import com.webprojet.reservation.spectateur.SaisieAcheteur;
 
 /**
  * @author DaCodeManiak
- * La définition de l'interface générale de l'application de gestion des Réservations
+ * La dï¿½finition de l'interface gï¿½nï¿½rale de l'application de gestion des Rï¿½servations
  *
  */
 public class MyReservation {
@@ -26,22 +28,27 @@ public class MyReservation {
 	 */
 	public static void main(String[] args) {
 		/**
-		 * Fenêtre principale de l'application...
+		 * FenÃªtre principale de l'application...
 		 */
-		final JFrame fenetre = new JFrame("Réservations");
+		final JFrame fenetre = new JFrame("RÃ©servations");
 		
 		/**
-		 * Construction d'un tableau reprenant les titres des spectacles créés
-		 *	- Un tableau de chaînes consistuant les colonnes du JTable
-		 *	- un modèle DefaultTableModel à partir de ces colonnes
-		 *	- le tableau lui-même
+		 * DÃ©finit la collection des spectacles crÃ©Ã©s
+		 */
+		Spectacles programmation = new Spectacles();
+		
+		/**
+		 * Construction d'un tableau reprenant les titres des spectacles crÃ©Ã©s
+		 *	- Un tableau de chaÃ®nes consistuant les colonnes du JTable
+		 *	- un modÃ¨le DefaultTableModel Ã  partir de ces colonnes
+		 *	- le tableau lui-mÃªme
 		 */
 		String[] tableHeaders = {"Type", "Titre", "Description", "Nb. Places"};
 		final DefaultTableModel modele = new DefaultTableModel(tableHeaders,0);
 		JTable spectacles = new JTable(modele);
 		
 		/**
-		 * Il faut ajouter notre tableau à la fenêtre elle-même
+		 * Il faut ajouter notre tableau Ã  la fenÃªtre elle-mÃªme
 		**/
 		fenetre.getContentPane().add(new JScrollPane(spectacles));
 		
@@ -51,7 +58,7 @@ public class MyReservation {
 		JMenuBar menu = new JMenuBar();
 		
 		/**
-		 * Ajoutons quelques menus à cette barre de menu
+		 * Ajoutons quelques menus Ã  cette barre de menu
 		 */
 		JMenu menuFichier = new JMenu("Fichier");
 		menu.add(menuFichier);
@@ -62,21 +69,32 @@ public class MyReservation {
 		JMenuItem itemSpectacle = new JMenuItem("Nouveau spectacle", 'S');
 		menuFichier.add(itemSpectacle);
 		
+		/**
+		 * Ajoutons l'option de menu pour crÃ©er une nouvelle rÃ©servation
+		 * 	ATTENTION, Ã§a ne sert Ã  rien de positionner cette option si
+		 * 	pour l'instant il n'y a pas de spectacles
+		 *  Pour Ãªtre plus "user friendly", peut Ãªtre crÃ©er l'option mais ne pas
+		 *  l'activer...
+		 */
+		JMenuItem itemReservation = new JMenuItem("Nouvelle rÃ©servation", 'R');
+		itemReservation.setEnabled(programmation.hasElements());
+		menuFichier.add(itemReservation);
+		
 		JMenuItem itemQuitter = new JMenuItem("Quitter", 'Q');
 		menuFichier.add(itemQuitter);
 		
 		
 		/**
-		 * Il faut définir désormais quels sont les "listeners" à créer
-		 * et quelles doivent être les actions à traiter lorsque l'événement
-		 * surviendra sur l'élément "écouté"
-		 *	1. Le plus facile, on va écouter l'option Quitter du menu Fichier
-		 *		et lorsque cette option sera sélectionnée (actionPerformed)
+		 * Il faut dÃ©finir dÃ©sormais quels sont les "listeners" Ã  crÃ©er
+		 * et quelles doivent Ãªtre les actions Ã  traiter lorsque l'Ã©vÃ©nement
+		 * surviendra sur l'Ã©lÃ©ment Ã©coutÃ©
+		 *	1. Le plus facile, on va Ã©couter l'option Quitter du menu Fichier
+		 *		et lorsque cette option sera sÃ©lectionnÃ©e (actionPerformed)
 		 *		on quittera l'application !
 		 */
 		itemQuitter.addActionListener(new ActionListener(){
 				/**
-				 * Implémentation de la méthode actionPerformed() définie dans
+				 * ImplÃ©mentation de la mÃ©thode actionPerformed() dÃ©finie
 				 * l'interface ActionListener
 				 */
 				public void actionPerformed(ActionEvent event){
@@ -85,19 +103,40 @@ public class MyReservation {
 				}
 		});
 		
+		itemReservation.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event){
+				// Instancie l'objet Acheteur
+				SaisieAcheteur acheteur = new SaisieAcheteur();
+				acheteur.programmation(programmation);
+				
+				// RÃ©ponse de l'utilisateur
+				int response = JOptionPane.showConfirmDialog(
+						fenetre, // Pour pouvoir ouvrir la boÃ®te au milieu de la fenÃªtre principale 
+						acheteur.process(), // CrÃ©ation du formulaire
+						"Nouvelle rÃ©servation", // Titre de la boÃ®te de dialogue
+						JOptionPane.OK_CANCEL_OPTION, // Boutons Ã  afficher
+						JOptionPane.PLAIN_MESSAGE // Aucune icÃ´ne dans le dialogue
+				);
+				// En fonction de cette rÃ©ponse...
+				if(response == JOptionPane.OK_OPTION){
+					// L'utilisateur a validÃ©... on fait quoi ?
+					JOptionPane.showMessageDialog(fenetre, "Oki, on est sorti !");
+				}
+			}
+		});
 		/**
 		 * Le codage de l'option Nouveau Spectacle...
-		 * On informe Java qu'on veut qu'il écoute ce qui se passe sur cette option
-		 * 	et on définit ce qui doit se passer si l'action est définie
-		 * 	L'utilisateur a cliqué sur l'option du menu concernée
+		 * On informe Java qu'on veut qu'il ï¿½coute ce qui se passe sur cette option
+		 * 	et on dÃ©finit ce qui doit se passer si l'action est dÃ©finie
+		 * 	L'utilisateur a cliquÃ© sur l'option du menu concernÃ©e
 		 */
 		itemSpectacle.addActionListener(new ActionListener(){
-				// Implémentation de la méthode actionPerformed définie dans l'interface
+				// ImplÃ©mentation de la mÃ©thode actionPerformed dÃ©finie dans l'interface
 				public void actionPerformed(ActionEvent event){
 					// Instanciation du formulaire de saisie des spectacles
 					SaisieSpectacle formulaire = new SaisieSpectacle();
 					
-					// On récupère la réponse utilisateur au dialogue créé
+					// On rÃ©cupÃ¨re la rÃ©ponse utilisateur au dialogue crÃ©Ã©
 					int responseUtilisateur = JOptionPane.showConfirmDialog(fenetre, 
 							formulaire,
 							"Nouveau Spectacle",
@@ -105,33 +144,38 @@ public class MyReservation {
 							JOptionPane.PLAIN_MESSAGE
 					);
 					
-					// En fonction de la réponse utilisateur...
+					// En fonction de la rÃ©ponse utilisateur...
 					if(responseUtilisateur == JOptionPane.OK_OPTION){
 						Object spectacle = null;
 						String type;
 						
-						// Intégrer le choix fait par l'utilisateur dans le combo
-						if(formulaire.typeSelectionne().equals("Opéra")){
+						// IntÃ©grer le choix fait par l'utilisateur dans le combo
+						if(formulaire.typeSelectionne().equals("OpÃ©ra")){
 							spectacle = new Opera();
-							type = "Opéra";
+							type = "OpÃ©ra";
 						} else {
 							spectacle = new Theatre();
-							type = "Théâtre";
+							type = "ThÃ©Ã¢tre";
 						}
 						
 						((Spectacle) spectacle).titre(formulaire.titreSaisi())
 							.description(formulaire.descriptionSaisie())
 							.placesDisponibles(formulaire.placesSaisies());
 						
-						// Il faudrait arriver à l'afficher dans le tableau maintenant
+						// Il faudrait arriver Ã  l'afficher dans le tableau maintenant
 						modele.addRow(new String[] {type, ((Spectacle)spectacle).titre(), ((Spectacle)spectacle).description(), String.format("%d", ((Spectacle)spectacle).placesDisponibles())});
-							
+						
+						// En plus, ajouter le nouveau spectacle Ã  la collection des spectacles
+						programmation.spectacles().add((Spectacle) spectacle);
+						
+						// C'est bon, on devrait rÃ©activer l'option
+						itemReservation.setEnabled(programmation.hasElements());
 					}
 				}
 			}
 		);
 		/**
-		 * On n'oublie pas d'ajouter aussi à la fenêtre notre barre de menu
+		 * On n'oublie pas d'ajouter aussi Ã  la fenÃªtre notre barre de menu
 		 */
 		fenetre.setJMenuBar(menu);
 		

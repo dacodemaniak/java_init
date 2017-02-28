@@ -6,10 +6,14 @@ package com.webprojet.reservation.spectateur;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import com.webprojet.reservation.spectacle.Spectacle;
+import com.webprojet.reservation.spectacle.Spectacles;
 
 /**
  * @author DaCodeManiak
@@ -22,16 +26,30 @@ public class SaisieAcheteur extends SaisiePersonne {
 	 */
 	protected JTextField saisieEmail = new JTextField(30);
 	protected JTextArea saisieAdresse = new JTextArea(5,30);
+	protected JComboBox selectionSpectacle = new JComboBox<String>();
+	
+	/**
+	 * Une instance d'un objet contenant la liste des spectacles
+	 */
+	private Spectacles programmation;
 	
 	public SaisieAcheteur() {
 		// Redéfinir le tableau des labels
-		this.labels = new String[]{"Nom", "Prénom", "Email", "Adresse"};
+		this.labels = new String[]{"Spectacle", "Nom", "Prénom", "Email", "Adresse"};
 		
 	}
 
 	public SaisieAcheteur process(){
 		this.makeForm();
 		return this;
+	}
+	
+	/**
+	 * Injecte l'objet de type Spectacles dans la classe courante (setter)
+	 * @param spectacles
+	 */
+	public void programmation(Spectacles spectacles){
+		this.programmation = spectacles;
 	}
 	
 	/**
@@ -63,6 +81,7 @@ public class SaisieAcheteur extends SaisiePersonne {
 		super.makeInputs(); // Appelle la méthode parente...
 		
 		// On ajoute les deux champs dans la grille
+		this.divField.add(this.programmation.getCombo(this.selectionSpectacle),0);
 		this.divField.add(this.saisieEmail);
 		this.divField.add(this.saisieAdresse);
 	}

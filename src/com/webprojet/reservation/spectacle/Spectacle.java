@@ -9,7 +9,7 @@ import com.webprojet.reservation.spectateur.*;
 /**
  * @author DaCodeManiak
  * @name Spectacle
- * 	Classe abstraite purement didactique, pour révisions
+ * 	Classe abstraite purement didactique, pour rï¿½visions
  *
  */
 public abstract class Spectacle {
@@ -23,9 +23,9 @@ public abstract class Spectacle {
 	protected ArrayList<Personne> spectateurs;
 	
 	/**
-	 * Définition des différents types de spectacle...
+	 * Dï¿½finition des diffï¿½rents types de spectacle...
 	 */
-	public static final String[] TYPES = {"Opéra", "Théâtre"};
+	public static final String[] TYPES = {"OpÃ©ra", "ThÃ©Ã¢tre"};
 	
 	public Spectacle(){
 		this.spectateurs = new ArrayList<Personne>();
