@@ -9,12 +9,14 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import com.webprojet.persistence.mysql.MySQL;
 import com.webprojet.reservation.spectacle.Opera;
 import com.webprojet.reservation.spectacle.SaisieSpectacle;
 import com.webprojet.reservation.spectacle.Spectacle;
 import com.webprojet.reservation.spectacle.Spectacles;
 import com.webprojet.reservation.spectacle.Theatre;
 import com.webprojet.reservation.spectateur.SaisieAcheteur;
+import com.webprojet.reservation.util.ReservationSetup;
 
 /**
  * @author DaCodeManiak
@@ -33,6 +35,20 @@ public class MyReservation {
 		final JFrame fenetre = new JFrame("Réservations");
 		
 		/**
+		 * On peut utiliser la base de données "reservation"
+		 */
+		ReservationSetup setup = new ReservationSetup();
+		
+		MySQL base = new MySQL(setup);
+		
+		/**
+		 * On arrête tout ici si on n'a pas réussi à se connecter
+		 */
+		if(base.get() == null){
+			System.exit(0);
+		}
+		
+		/**
 		 * Définit la collection des spectacles créés
 		 */
 		Spectacles programmation = new Spectacles();
@@ -44,7 +60,12 @@ public class MyReservation {
 		 *	- le tableau lui-même
 		 */
 		String[] tableHeaders = {"Type", "Titre", "Description", "Nb. Places"};
-		final DefaultTableModel modele = new DefaultTableModel(tableHeaders,0);
+		final DefaultTableModel modele = programmation.hydrate(tableHeaders);
+		/**
+		 * On pourrait créer la requête
+		 * puis exécuter la requête
+		 * puis boucler pour alimenter le modèle...
+		 */
 		JTable spectacles = new JTable(modele);
 		
 		/**
@@ -99,6 +120,7 @@ public class MyReservation {
 				 */
 				public void actionPerformed(ActionEvent event){
 					// Si tu cliques sur l'option Quitter... on termine l'application
+					base.disconnect(); // On coupe aussi la connexion
 					System.exit(0);
 				}
 		});

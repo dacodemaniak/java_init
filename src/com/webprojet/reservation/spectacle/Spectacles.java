@@ -3,9 +3,17 @@
  */
 package com.webprojet.reservation.spectacle;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.swing.JComboBox;
+import javax.swing.table.DefaultTableModel;
+
+import com.webprojet.persistence.SGBDSetup;
+import com.webprojet.persistence.mysql.MySQL;
+import com.webprojet.reservation.util.ReservationSetup;
 
 /**
  * @author DaCodeManiak
@@ -13,6 +21,83 @@ import javax.swing.JComboBox;
  */
 public class Spectacles {
 	private ArrayList<Spectacle> spectacles = new ArrayList<Spectacle>();
+	
+	/**
+	 * Constructeur qui va alimenter les données à partir de la base
+	 * de données...
+	 */
+	public Spectacles(){
+		this.getDataFromDb();
+	}
+	
+	public DefaultTableModel hydrate(String[] tableHeaders){
+		String type;
+		DefaultTableModel modele = new DefaultTableModel(tableHeaders,0);
+		
+		for(Spectacle spectacle : this.spectacles){
+			if(spectacle instanceof Opera){
+				type = "Opéra";
+			} else {
+				type = "Théâtre";
+			}
+			modele.addRow(new String[] {type,spectacle.titre(),spectacle.description(), String.format("%d", ((Spectacle)spectacle).placesDisponibles())});
+		}
+		return modele;
+	}
+	
+	private void getDataFromDb(){
+		/**
+		 * Définition des informations de connexion...
+		 */
+		SGBDSetup setup = new ReservationSetup();
+		
+		/**
+		 * Initialisation de la connexion
+		 */
+		MySQL base = new MySQL(setup);
+		
+		/**
+		 * Créer la requête pour récupérer les spectacles
+		 */
+		String selectStatement = "SELECT titre, description, type, nbplaces FROM spectacle;";
+		
+		/**
+		 * Essaye d'exécuter la requête...
+		 */
+		Object spectacle = null;
+		try{
+			/**
+			 * Crée un objet de type Statement (phrase SQL)
+			 */
+			Statement select = base.get().createStatement();
+			
+			/**
+			 * J'ai besoin d'un ResultSet pour lire les résultats
+			 */
+			ResultSet resultat = select.executeQuery(selectStatement);
+			
+			/**
+			 * On boucle sur le résultat pour alimenter le ArrayList
+			 */
+			while(resultat.next()){
+				if(resultat.getString("type") == "Opéra"){
+					spectacle = new Opera();
+				} else {
+					spectacle = new Theatre();
+				}
+				// Définition du spectacle
+				((Spectacle)spectacle).titre(resultat.getString("titre"));
+				((Spectacle)spectacle).description(resultat.getString("description"));
+				((Spectacle)spectacle).placesDisponibles(resultat.getInt("nbplaces"));
+				// On peut ajouter le spectacle à la collection
+				this.spectacles.add((Spectacle)spectacle);
+			}
+		} catch(SQLException e){
+			// Plantage dans la requête...
+		} finally {
+			base.disconnect();
+		}
+	}
 	
 	/**
 	 * getter pour retourner la liste des spectacles
