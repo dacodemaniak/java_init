@@ -10,11 +10,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import com.webprojet.persistence.mysql.MySQL;
+import com.webprojet.reservation.billetterie.Reservation;
 import com.webprojet.reservation.spectacle.Opera;
 import com.webprojet.reservation.spectacle.SaisieSpectacle;
 import com.webprojet.reservation.spectacle.Spectacle;
 import com.webprojet.reservation.spectacle.Spectacles;
 import com.webprojet.reservation.spectacle.Theatre;
+import com.webprojet.reservation.spectateur.Personne;
 import com.webprojet.reservation.spectateur.SaisieAcheteur;
 import com.webprojet.reservation.util.ReservationSetup;
 
@@ -61,11 +63,12 @@ public class MyReservation {
 		 */
 		String[] tableHeaders = {"Type", "Titre", "Description", "Nb. Places"};
 		final DefaultTableModel modele = programmation.hydrate(tableHeaders);
+		
 		/**
-		 * On pourrait créer la requête
-		 * puis exécuter la requête
-		 * puis boucler pour alimenter le modèle...
-		 */
+		 * A implémenter ce week-end...
+		String[] resaHeaders = {"Nom", "Prénom", "Places", "Spectacle"};
+		final DefaultTableModel resa = Reservations.hydrate(resaHeaders);
+		**/
 		JTable spectacles = new JTable(modele);
 		
 		/**
@@ -141,8 +144,29 @@ public class MyReservation {
 				);
 				// En fonction de cette réponse...
 				if(response == JOptionPane.OK_OPTION){
+					//1. Créons une nouvelle réservation... dans la base de données
+					// ATTENTION, on doit pouvoir récupérer l'id du spectacle à partir
+					// de la chaîne de caractères...
+					
+					// Création de l'instance d'une Personne : acheteur à partir des informations saisies par l'utilisateur
+					Personne personne = new Personne(
+							acheteur.getSaisieNom(),
+							acheteur.getSaisiePrenom(),
+							acheteur.getSaisieEmail(),
+							acheteur.getSaisieAdresse()
+					);
+					// En plus, c'est lui l'acheteur...
+					personne.isAcheteur(true);
+					
+					// Il faut que je récupère une instance du spectacle concerné...
+					Spectacle spectacle = Spectacle.get(acheteur.getSelectionSpectacle());
+					Reservation reservation = new Reservation(spectacle, personne);
+					
+					// On peut faire persister tout ce beau monde...
+					reservation.persist();
+					
 					// L'utilisateur a validé... on fait quoi ?
-					JOptionPane.showMessageDialog(fenetre, "Oki, on est sorti !");
+					JOptionPane.showMessageDialog(fenetre, "La réservation a bien été créée");
 				}
 			}
 		});
@@ -188,7 +212,12 @@ public class MyReservation {
 						modele.addRow(new String[] {type, ((Spectacle)spectacle).titre(), ((Spectacle)spectacle).description(), String.format("%d", ((Spectacle)spectacle).placesDisponibles())});
 						
 						// En plus, ajouter le nouveau spectacle à la collection des spectacles
-						programmation.spectacles().add((Spectacle) spectacle);
+						//programmation.spectacles().add((Spectacle) spectacle);
+						
+						// New Way...
+						programmation.add((Spectacle) spectacle);
+						
+						// Ce qui serait bien... serait aussi de l'insérer en base de données
 						
 						// C'est bon, on devrait réactiver l'option
 						itemReservation.setEnabled(programmation.hasElements());

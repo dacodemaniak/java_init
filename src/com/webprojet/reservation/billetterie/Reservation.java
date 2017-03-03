@@ -3,8 +3,16 @@
  */
 package com.webprojet.reservation.billetterie;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.GregorianCalendar;
+
+import com.webprojet.persistence.mysql.MySQL;
 import com.webprojet.reservation.spectacle.Spectacle;
 import com.webprojet.reservation.spectateur.Personne;
+import com.webprojet.reservation.util.ReservationSetup;
 
 /**
  * @author DaCodeManiak
@@ -12,17 +20,17 @@ import com.webprojet.reservation.spectateur.Personne;
  */
 public class Reservation {
 	/**
-	 * NumÈro d'une rÈservation : rÈfÈrence ‡ imprimer...
+	 * Num√©ro de r√©servation
 	 */
 	private String numero;
 	
 	/**
-	 * L'objet reprÈsentant le spectacle concernÈ par la rÈservation
+	 * L'objet repr√©sentant le spectacle concern√© par la r√©servation
 	 */
 	private Spectacle spectacle; 
 	
 	/**
-	 * L'objet reprÈsentant la personne qui fait la rÈservation
+	 * L'objet repr√©sentant la personne qui fait la r√©servation
 	 */
 	private Personne acheteur;
 	
@@ -40,6 +48,39 @@ public class Reservation {
 		return false;
 	}
 	
+	public void persist(){
+		MySQL base = new MySQL(new ReservationSetup());
+		
+		try{
+			PreparedStatement resa = base.get().prepareStatement("INSERT INTO reservation (numero,date,id_spectacle) VALUES (?,?,?);");
+			resa.setString(1, "0001");
+			resa.setDate(2, (Date) new GregorianCalendar().getTime());
+			resa.setInt(3, this.spectacle.id());
+			
+			resa.executeUpdate(); // Cr√©e r√©ellement la r√©servation
+			
+			int id = this.getLastId(base);
+			
+			// Faire persister l'acheteur...
+			// R√©cup√©rer son identifiant
+			
+			// Faire persister la table d'association "personnes_reservations"
+			
+		} catch(SQLException e){
+			// En esp√©rant qu'il n'y ait pas d'erreurs...
+		}
+	}
 	
-	
+	private int getLastId(MySQL base){
+		int lastId = 1;
+		try {
+			PreparedStatement last = base.get().prepareStatement("SELECT id FROM reservation ORDER BY id DESC LIMIT 0,1;");
+			ResultSet resultat = last.executeQuery();
+			resultat.next();
+			lastId = resultat.getInt("id");
+		} catch(SQLException e){
+			// Normalement pas d'exception...
+		}
+		return lastId;
+	}
 }

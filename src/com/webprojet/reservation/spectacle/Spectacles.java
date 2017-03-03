@@ -32,6 +32,7 @@ public class Spectacles {
 	
 	public DefaultTableModel hydrate(String[] tableHeaders){
 		String type;
+		
 		DefaultTableModel modele = new DefaultTableModel(tableHeaders,0);
 		
 		for(Spectacle spectacle : this.spectacles){
@@ -43,6 +44,14 @@ public class Spectacles {
 			modele.addRow(new String[] {type,spectacle.titre(),spectacle.description(), String.format("%d", ((Spectacle)spectacle).placesDisponibles())});
 		}
 		return modele;
+	}
+	
+	public void add(Spectacle spectacle){
+		// Ajoute le spectacle à la collection (ArrayList)
+		this.spectacles.add(spectacle);
+		
+		// Utilise la méthode "persist()" pour insérer le spectacle dans la base
+		spectacle.persist();
 	}
 	
 	private void getDataFromDb(){
@@ -80,7 +89,10 @@ public class Spectacles {
 			 * On boucle sur le résultat pour alimenter le ArrayList
 			 */
 			while(resultat.next()){
-				if(resultat.getString("type") == "Opéra"){
+				/**
+				 * ATTENTION ! utiliser .equals() pour comparer des objets de type String
+				 */
+				if(resultat.getString("type").equals("Opéra")){
 					spectacle = new Opera();
 				} else {
 					spectacle = new Theatre();
@@ -89,6 +101,7 @@ public class Spectacles {
 				((Spectacle)spectacle).titre(resultat.getString("titre"));
 				((Spectacle)spectacle).description(resultat.getString("description"));
 				((Spectacle)spectacle).placesDisponibles(resultat.getInt("nbplaces"));
+				
 				// On peut ajouter le spectacle à la collection
 				this.spectacles.add((Spectacle)spectacle);
 			}

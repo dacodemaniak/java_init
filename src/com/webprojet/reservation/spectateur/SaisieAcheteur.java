@@ -65,7 +65,11 @@ public class SaisieAcheteur extends SaisiePersonne {
 	public String getSaisieAdresse() {
 		return this.saisieAdresse.getText();
 	}
-
+	
+	public String getSelectionSpectacle(){
+		return (String) this.selectionSpectacle.getSelectedItem();
+	}
+	
 	/**
 	 * Méthode protégée pour pouvoir être réécrite dans les classes filles
 	 */

@@ -6,7 +6,7 @@ package com.webprojet.reservation.spectateur;
 /**
  * @author DaCodeManiak
  * @name Personne
- * Définition de l'ensemble des personnes qui seront concernées (ou non) par un spectacle
+ * Dï¿½finition de l'ensemble des personnes qui seront concernï¿½es (ou non) par un spectacle
  *
  */
 public class Personne implements Acheteur{
@@ -37,7 +37,7 @@ public class Personne implements Acheteur{
 	}
 	
 	/**
-	 * Implémentation des méthodes de l'interface Acheteur
+	 * ImplÃ©mentation des mÃ©thodes de l'interface Acheteur
 	 */
 	public Personne isAcheteur(boolean isAcheteur){
 		this.isAcheteur = isAcheteur;
