@@ -56,6 +56,11 @@ public class MyReservation {
 		Spectacles programmation = new Spectacles();
 		
 		/**
+		 * Définit la collection des réservations réalisées
+		 */
+		Reservations reservations = new Reservations();
+		
+		/**
 		 * Construction d'un tableau reprenant les titres des spectacles créés
 		 *	- Un tableau de chaînes consistuant les colonnes du JTable
 		 *	- un modèle DefaultTableModel à partir de ces colonnes
@@ -63,6 +68,13 @@ public class MyReservation {
 		 */
 		String[] tableHeaders = {"Type", "Titre", "Description", "Nb. Places"};
 		final DefaultTableModel modele = programmation.hydrate(tableHeaders);
+		
+		/**
+		 * Construire un tableau avec les réservations existantes...
+		 * - Nom du spectacle, Nom et prénom de l'acheteur
+		**/
+		String[] resaHeaders = {"Spectacle", "Acheteur"};
+		final DefaultTableModel resaModele = reservations.hydrate(resaHeaders);
 		
 		/**
 		 * A implémenter ce week-end...

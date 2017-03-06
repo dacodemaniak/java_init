@@ -5,6 +5,8 @@ package com.webprojet.persistence;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
@@ -82,5 +84,35 @@ public abstract class DbConnect implements Connect{
 	
 	public Connection get(){
 		return this.connection;
+	}
+	
+	public int getLastId(String tableName){
+		int lastId = 1;
+		
+		try{
+			PreparedStatement last = this.connection.prepareStatement("SELECT id FROM " + tableName + " ORDER BY id DESC LIMIT 0,1;");
+			ResultSet resultat = last.executeQuery();
+			resultat.next();
+			lastId = resultat.getInt("id");
+		} catch(SQLException e){
+			System.out.println("Erreur : " + e.getErrorCode() + " => " + e.getMessage());
+		}
+		
+		return lastId;
+	}
+	
+	public int getLastId(String tableName, String primaryKeyName){
+		int lastId = 1;
+		
+		try{
+			PreparedStatement last = this.connection.prepareStatement("SELECT " + primaryKeyName + " FROM " + tableName + " ORDER BY " + primaryKeyName + " DESC LIMIT 0,1;");
+			ResultSet resultat = last.executeQuery();
+			resultat.next();
+			lastId = resultat.getInt(primaryKeyName);
+		} catch(SQLException e){
+			System.out.println("Erreur : " + e.getErrorCode() + " => " + e.getMessage());
+		}
+		
+		return lastId;		
 	}
 }

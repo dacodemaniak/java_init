@@ -13,4 +13,6 @@ public interface Connect {
 	public void connect();
 	public Connection get();
 	public void disconnect();
+	public int getLastId(String tableName);
+	public int getLastId(String tableName, String primaryKeyName);
 }

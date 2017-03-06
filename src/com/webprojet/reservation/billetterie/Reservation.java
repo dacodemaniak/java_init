@@ -63,7 +63,12 @@ public class Reservation {
 			resa.executeUpdate(); // Crée réellement la réservation
 			
 			// Récupère le dernier identifiant de la table reservation
+			/**
+			 * Obsolète... @see MySQL::getLastId(String tableName)
+			
 			int idReservation = this.getLastId(base);
+			 */
+			int idReservation = base.getLastId("reservation");
 			
 			// Faire persister l'acheteur...
 			int idAcheteur = this.acheteur.persist();

@@ -78,7 +78,7 @@ public class Personne implements Acheteur{
 			// Exécute la requête...
 			insert.executeUpdate();
 			// Récupère le dernier identifiant créé
-			id = this.getLastId(base);
+			id = base.getLastId("personne");
 			
 		} catch(SQLException e){
 			// Normalement, pas de problème à prévoir...
@@ -88,6 +88,7 @@ public class Personne implements Acheteur{
 	
 	/**
 	 * Retourne le dernier identifiant de la table personne...
+	 * @deprecated Voir la méthode com.webprojet.persistence.DbConnect.getLastId()
 	 * @param base
 	 * @return
 	 */
