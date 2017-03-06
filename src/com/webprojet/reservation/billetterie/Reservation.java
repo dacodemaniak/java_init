@@ -54,17 +54,22 @@ public class Reservation {
 		try{
 			PreparedStatement resa = base.get().prepareStatement("INSERT INTO reservation (numero,date,id_spectacle) VALUES (?,?,?);");
 			resa.setString(1, "0001");
-			resa.setDate(2, (Date) new GregorianCalendar().getTime());
+			// Récupération de la date du jour...
+			java.util.Date today = new java.util.Date(); // Récupère la date du jour...
+			java.sql.Date sqlDate = new java.sql.Date(today.getTime()); // Formate au format SQL
+			resa.setDate(2, sqlDate);
 			resa.setInt(3, this.spectacle.id());
 			
 			resa.executeUpdate(); // Crée réellement la réservation
 			
-			int id = this.getLastId(base);
+			// Récupère le dernier identifiant de la table reservation
+			int idReservation = this.getLastId(base);
 			
 			// Faire persister l'acheteur...
-			// Récupérer son identifiant
+			int idAcheteur = this.acheteur.persist();
 			
 			// Faire persister la table d'association "personnes_reservations"
+			this.persistTableAsso(idAcheteur, idReservation, 1, base);
 			
 		} catch(SQLException e){
 			// En espérant qu'il n'y ait pas d'erreurs...
@@ -82,5 +87,19 @@ public class Reservation {
 			// Normalement pas d'exception...
 		}
 		return lastId;
+	}
+	
+	public void persistTableAsso(int idAcheteur, int idReservation, int isAcheteur, MySQL base){
+		try {
+			PreparedStatement insert = base.get().prepareStatement("INSERT INTO personnes_reservations (id_personne,id_reservation,is_acheteur) VALUES (?, ?, ?);");
+			insert.setInt(1, idAcheteur);
+			insert.setInt(2, idReservation);
+			insert.setInt(3, isAcheteur);
+			
+			insert.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

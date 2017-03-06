@@ -3,6 +3,13 @@
  */
 package com.webprojet.reservation.spectateur;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.webprojet.persistence.mysql.MySQL;
+import com.webprojet.reservation.util.ReservationSetup;
+
 /**
  * @author DaCodeManiak
  * @name Personne
@@ -46,5 +53,54 @@ public class Personne implements Acheteur{
 	
 	public boolean isAcheteur(){
 		return this.isAcheteur;
+	}
+
+	public int persist() {
+		/**
+		 * Identifiant résultant de la requête d'insertion
+		 */
+		int id = 1;
+		
+		// Connexion à la base de données
+		MySQL base = new MySQL(new ReservationSetup());
+		
+		// Définir la requête d'insertion elle-même
+		String statement = "INSERT INTO personne (nom,prenom,email,adresse) VALUES (?,?,?,?);";
+		
+		// Préparer la requête d'insertion...
+		try{
+			PreparedStatement insert = base.get().prepareStatement(statement);
+			// On remplace les ? par les valeurs elles-mêmes
+			insert.setString(1, this.nom);
+			insert.setString(2, this.prenom);
+			insert.setString(3, this.email);
+			insert.setString(4, this.adresse);
+			// Exécute la requête...
+			insert.executeUpdate();
+			// Récupère le dernier identifiant créé
+			id = this.getLastId(base);
+			
+		} catch(SQLException e){
+			// Normalement, pas de problème à prévoir...
+		}
+		return id; // Retourne l'identifiant de la nouvelle ligne de la table personne
+	}
+	
+	/**
+	 * Retourne le dernier identifiant de la table personne...
+	 * @param base
+	 * @return
+	 */
+	private int getLastId(MySQL base){
+		int lastId = 1;
+		try {
+			PreparedStatement last = base.get().prepareStatement("SELECT id FROM personne ORDER BY id DESC LIMIT 0,1;");
+			ResultSet resultat = last.executeQuery();
+			resultat.next(); // Charger la seule et unique ligne...
+			lastId = resultat.getInt("id");
+		} catch(SQLException e){
+			// Normalement pas d'exception...
+		}
+		return lastId;		
 	}
 }
