@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.webprojet.persistence.mysql.MySQL;
 import com.webprojet.reservation.billetterie.Reservation;
+import com.webprojet.reservation.billetterie.Reservations;
 import com.webprojet.reservation.spectacle.Opera;
 import com.webprojet.reservation.spectacle.SaisieSpectacle;
 import com.webprojet.reservation.spectacle.Spectacle;
@@ -82,11 +83,26 @@ public class MyReservation {
 		final DefaultTableModel resa = Reservations.hydrate(resaHeaders);
 		**/
 		JTable spectacles = new JTable(modele);
+		JTable tabResa = new JTable(resaModele);
+		
+		/**
+		 * Définition des composants affichés
+		 */
+		final JScrollPane componentSpectacle = new JScrollPane(spectacles);
+		final JScrollPane componentReservation = new JScrollPane(tabResa);
 		
 		/**
 		 * Il faut ajouter notre tableau à la fenêtre elle-même
 		**/
-		fenetre.getContentPane().add(new JScrollPane(spectacles));
+		componentSpectacle.setSize(1024, 768);
+		componentSpectacle.setVisible(true);
+		fenetre.getContentPane().add(componentSpectacle);
+		
+		/**
+		 * Ajouter aussi le tableau des réservations à la fenêtre
+		 */
+		componentReservation.setVisible(false);
+		fenetre.getContentPane().add(componentReservation);
 		
 		/**
 		 * Ajoutons une barre de menu : Fichier... par exemple
@@ -142,6 +158,14 @@ public class MyReservation {
 		
 		itemReservation.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+				/**
+				 * switch des composants affichés
+				 */
+				componentSpectacle.setVisible(false); // Masquer le tableau des spectacles
+				
+				componentReservation.setSize(1024,768);
+				componentReservation.setVisible(true);
+				
 				// Instancie l'objet Acheteur
 				SaisieAcheteur acheteur = new SaisieAcheteur();
 				acheteur.programmation(programmation);
@@ -177,6 +201,11 @@ public class MyReservation {
 					// On peut faire persister tout ce beau monde...
 					reservation.persist();
 					
+					// Ajouter la réservation à la liste des réservations
+					reservations.add(reservation);
+					
+					// Ajoute les informations au composant Tableau
+					resaModele.addRow(new String[] {reservation.getSpectacle().titre(), reservation.getPersonne().personneName()});
 					// L'utilisateur a validé... on fait quoi ?
 					JOptionPane.showMessageDialog(fenetre, "La réservation a bien été créée");
 				}
@@ -191,6 +220,13 @@ public class MyReservation {
 		itemSpectacle.addActionListener(new ActionListener(){
 				// Implémentation de la méthode actionPerformed définie dans l'interface
 				public void actionPerformed(ActionEvent event){
+					/**
+					 * Switcher l'affichage des tableaux...
+					 */
+					componentReservation.setVisible(false);
+					componentSpectacle.setSize(1024, 768);
+					componentSpectacle.setVisible(true);
+					
 					// Instanciation du formulaire de saisie des spectacles
 					SaisieSpectacle formulaire = new SaisieSpectacle();
 					

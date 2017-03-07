@@ -86,6 +86,10 @@ public class Personne implements Acheteur{
 		return id; // Retourne l'identifiant de la nouvelle ligne de la table personne
 	}
 	
+	public String personneName(){
+		return this.prenom + " " + this.nom;
+	}
+	
 	/**
 	 * Retourne le dernier identifiant de la table personne...
 	 * @deprecated Voir la méthode com.webprojet.persistence.DbConnect.getLastId()

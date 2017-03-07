@@ -39,6 +39,14 @@ public class Reservation {
 		this.acheteur = acheteur;
 	}
 	
+	public Spectacle getSpectacle(){
+		return this.spectacle;
+	}
+	
+	public Personne getPersonne(){
+		return this.acheteur;
+	}
+	
 	public boolean addPersonne(Personne personne){
 		if(this.spectacle.placesRestantes() > 0){
 			// C'est bon on peut ajouter la personne au spectacle
