@@ -67,8 +67,9 @@ public class Spectacles {
 		
 		/**
 		 * Créer la requête pour récupérer les spectacles
+		 * @update Ajout de la colonne id pour pouvoir récupérer la clé primaire des spectacles
 		 */
-		String selectStatement = "SELECT titre, description, type, nbplaces FROM spectacle;";
+		String selectStatement = "SELECT id, titre, description, type, nbplaces FROM spectacle;";
 		
 		/**
 		 * Essaye d'exécuter la requête...
@@ -98,6 +99,7 @@ public class Spectacles {
 					spectacle = new Theatre();
 				}
 				// Définition du spectacle
+				((Spectacle) spectacle).id(resultat.getInt("id"));
 				((Spectacle)spectacle).titre(resultat.getString("titre"));
 				((Spectacle)spectacle).description(resultat.getString("description"));
 				((Spectacle)spectacle).placesDisponibles(resultat.getInt("nbplaces"));

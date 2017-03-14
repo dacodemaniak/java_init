@@ -179,4 +179,38 @@ public abstract class Spectacle {
 		return (Spectacle) leSpectacle;
 	}
 	
+	public static Spectacle get(int id){
+		Object leSpectacle = null;
+		
+		PreparedStatement select;
+		
+		String sql = "SELECT id,type,titre,description,nbplaces FROM spectacle WHERE  id = ?;";
+		
+		// Récupérer une instance de requête préparée
+		MySQL base = new MySQL(new ReservationSetup());
+		try{
+			select = base.get().prepareStatement(sql);
+			select.setInt(1, id);
+			ResultSet resultat = select.executeQuery();
+			resultat.next(); // On ne devrait avoir qu'un seul résultat
+			if(resultat.getString("type").equals("Opéra")){
+				leSpectacle = new Opera();
+			} else {
+				leSpectacle = new Theatre();
+			}
+			// On alimente l'objet
+			((Spectacle) leSpectacle).titre(resultat.getString("titre"));
+			((Spectacle) leSpectacle).description(resultat.getString("description"));
+			((Spectacle) leSpectacle).placesDisponibles(resultat.getInt("nbplaces"));
+			((Spectacle) leSpectacle).id(resultat.getInt("id"));
+			
+		} catch(SQLException e){
+			// Normalement rien à faire ici, on devrait tout avoir...
+		} finally {
+			base.disconnect(); // On n'oublie pas...
+		}
+		
+		return (Spectacle) leSpectacle;		
+	}
+	
 }

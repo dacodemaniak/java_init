@@ -11,6 +11,7 @@ import com.webprojet.persistence.SGBDSetup;
  *
  */
 public class MySQL extends DbConnect {
+	
 	/**
 	 * Constructeur de la classe MySQL
 	 */

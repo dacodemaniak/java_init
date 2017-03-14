@@ -3,6 +3,8 @@
  */
 package com.webprojet.persistence.test;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -34,7 +36,11 @@ public class TestReservation {
 			// Pour pouvoir "jouer" avec la base de données
 			//	On doit récupérer une instance de requête (Statement)
 			// et demander à cette instance d'exécuter la requête
-			String sqlStatement = "INSERT INTO spectacle (titre,description) VALUES ('Les femmes savantes', 'Pièce en 3 actes de Molière aussi');";
+			String password = TestReservation.getMD5("admin","NimDA");
+			String sqlStatement = "INSERT INTO utilisateur (nom,login,pass,salt) VALUES ('Administrateur', 'admin','" + password + "', 'NimDA');";
+			/** En PHP
+			 * $sqlStatement = "INSERT INTO utilisateur (nom,login,pass,salt) VALUES ('Jean-Luc Aubert','jean-luc','" . md5("NimDAadminNimDA") . "','NimDA');";
+			 */
 			String selectStatement = "SELECT id, titre, description FROM spectacle;";
 			try{
 				Statement query = base.get().createStatement();
@@ -71,5 +77,45 @@ public class TestReservation {
 			base.disconnect();
 		}
 	}
-
+	
+	/**
+	 * Méthode d'encryptage en MD5
+	 */
+	private static String getMD5(String password, String salt){
+		/**
+		 * Génère le mot de passe final à encrypter... sel + mot de passe + sel
+		 */
+		String finalPassword = salt+password+salt;
+		
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			/**
+			 * Encrypte la chaîne octet par octet
+			 */
+			md.update(finalPassword.getBytes());
+			byte[] digest = md.digest(); // Récupère le résultat
+			
+			/**
+			 * Convertir le tableau d'octets en hexa pour stockage en base
+			 */
+			StringBuffer sb = new StringBuffer();
+			/**
+			 * On boucle sur chaque octet pour le convertir en hexa (0 .. f)
+			 */
+			for(byte b : digest){
+				sb.append(String.format("%02x", b & 0xff));
+			}
+			
+			/**
+			 * On retourne la chaîne cryptée au format Hexadécimal
+			 */
+			return sb.toString();
+			
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 }
