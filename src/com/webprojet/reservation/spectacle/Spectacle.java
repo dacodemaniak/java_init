@@ -30,8 +30,11 @@ public abstract class Spectacle {
 	 * 	au moment de l'exécution de la requête
 	 */
 	private PreparedStatement insert;
+	private PreparedStatement update;
 	
 	private String queryInsert = "INSERT INTO spectacle (type,titre,description,nbplaces) VALUES (?,?,?,?)";
+	
+	private String queryUpdate = "UPDATE spectacle SET type=?,titre=?,description=?,nbplaces=? WHERE id=?;";
 	
 	/**
 	 * Collection des spectateurs pour un spectacle
@@ -108,35 +111,54 @@ public abstract class Spectacle {
 	 * spectacle.
 	 */
 	public void persist(){
-		String type;
+		String type = "Opéra";
+		
+		// On détermine le type de spectacle à partir de l'instance de l'objet courant
+		if(this instanceof Opera){
+			type = "Opéra";
+		} else {
+			type = "Théâtre";
+		}
 		
 		// Instancier la connexion à la base de donnée...
 		MySQL base = new MySQL(new ReservationSetup());
 		
 		// Récupérer une instance de requête préparée
-		try{
-			this.insert = base.get().prepareStatement(this.queryInsert);
-			
-			// On détermine le type de spectacle à partir de l'instance de l'objet courant
-			if(this instanceof Opera){
-				type = "Opéra";
-			} else {
-				type = "Théâtre";
+		if(this.id == 0){
+			try{
+				this.insert = base.get().prepareStatement(this.queryInsert);
+				
+				// Il faut juste remplacer les ? par les valeurs concernées
+				this.insert.setString(1, type);
+				this.insert.setString(2, this.titre);
+				this.insert.setString(3, this.description);
+				this.insert.setInt(4, this.placesDisponibles);
+				
+				// On peut donc utiliser la méthode executeUpdate()
+				this.insert.executeUpdate();
+			} catch(SQLException e){
+				// Il y aura eu un problème de traitement de la requête...
+				e.printStackTrace();
+			} finally {
+				base.disconnect();
 			}
-			
-			// Il faut juste remplacer les ? par les valeurs concernées
-			this.insert.setString(1, type);
-			this.insert.setString(2, this.titre);
-			this.insert.setString(3, this.description);
-			this.insert.setInt(4, this.placesDisponibles);
-			
-			// On peut donc utiliser la méthode executeUpdate()
-			this.insert.executeUpdate();
-		} catch(SQLException e){
-			// Il y aura eu un problème de traitement de la requête...
-			e.printStackTrace();
-		} finally {
-			base.disconnect();
+		} else {
+			// L'id n'est pas égal à 0, on fait donc une mise à jour
+			try{
+				this.update = base.get().prepareStatement(this.queryUpdate);
+				this.update.setString(1, type); // Premier ? => type
+				this.update.setString(2, this.titre);
+				this.update.setString(3, this.description);
+				this.update.setInt(4, this.placesDisponibles);
+				this.update.setInt(5, this.id);
+				
+				// On peut exécuter la requête de mise à jour...
+				this.update.executeUpdate();
+			} catch(SQLException e){
+				System.out.println("Erreur de mise à jour : " + e.getMessage());
+			} finally{
+				base.disconnect();
+			}
 		}
 	}
 	
@@ -211,6 +233,34 @@ public abstract class Spectacle {
 		}
 		
 		return (Spectacle) leSpectacle;		
+	}
+	
+	public String deleteAutorise(){
+		// Par défaut, on considère qu'on ne peut pas supprimer un spectacle
+		String output = " class=\"disabled\"";
+		
+		String sqlStatement = "SELECT COUNT(*) AS nbResa FROM spectacle AS s INNER JOIN reservation AS r ON s.id = r.id_spectacle WHERE s.id = ?;";
+		
+		// Connexion à la base de données
+		MySQL base = new MySQL(new ReservationSetup());
+		
+		try {
+			PreparedStatement statement = base.get().prepareStatement(sqlStatement);
+			statement.setInt(1,this.id);
+			ResultSet result = statement.executeQuery();
+			result.next();
+			if(result.getInt("nbResa") > 0){
+				// La suppression est interdite, j'ai au moins une ligne
+				output = " class=\"disabled\"";
+			} else {
+				output = " class=\"enabled\" data-id=\"" + this.id + "\"";
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return output;
 	}
 	
 }
